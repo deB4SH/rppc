@@ -1,31 +1,41 @@
 package de.b4sh.rabbitmqpingpong;
 
+import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
+import javax.swing.*;
 import java.io.IOException;
+import java.security.*;
+import java.security.cert.CertificateException;
 import java.util.concurrent.TimeoutException;
+import java.util.logging.Logger;
 
 public class Main {
+
+    private static final Logger log = Logger.getLogger(Main.class.getName());
+
     public static void main(String[] args) {
-
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setUsername(RuntimeConfiguration.USERNAME.getValue());
-        factory.setPassword(RuntimeConfiguration.PASSWORD.getValue());
-        factory.setVirtualHost(RuntimeConfiguration.VIRTUALHOST.getValue());
-        factory.setHost(RuntimeConfiguration.HOST.getValue());
-        factory.setPort(Integer.parseInt(RuntimeConfiguration.PORT.getValue()));
-
-        factory.se
-
+        RabbitMQService rabbitMQService = new RabbitMQService();
         try {
-            Connection rabbitMqConnection = factory.newConnection();
+            Connection connection = rabbitMQService.connectToRabbitMQ();
+            Channel channel = rabbitMQService.connectToChannel(connection);
+            rabbitMQService.declareQueue(channel,"ping-pong-test");
+            rabbitMQService.sendMessageToQueue(channel,"ping-pong-test","test");
+        } catch (KeyStoreException e) {
+            throw new RuntimeException(e);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (CertificateException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (UnrecoverableKeyException e) {
+            throw new RuntimeException(e);
+        } catch (KeyManagementException e) {
             throw new RuntimeException(e);
         } catch (TimeoutException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 }
