@@ -2,7 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=jetbrains+iml,netbeans,vim,eclipse,java,maven
 
 .env
-docker-compose.environment
+src/main/docker/environment/docker-compose.environment
 
 ### Eclipse ###
 .metadata

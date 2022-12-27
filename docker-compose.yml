@@ -1,6 +1,7 @@
 version: "3.9"
 services:
   svc1:
-    build: .
+    build:
+      context: .
     env_file:
-      - docker-compose.environment
+      - src/main/docker/environment/docker-compose.environment

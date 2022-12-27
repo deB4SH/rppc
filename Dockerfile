@@ -5,7 +5,8 @@ FROM maven:3.8.6-eclipse-temurin-19 AS builder
 WORKDIR /tmp
 COPY pom.xml /tmp/pom.xml
 COPY src /tmp/src
-RUN mvn clean install
+ARG MAVENOPS
+RUN mvn clean install $MAVENOPS
 
 
 FROM eclipse-temurin:19.0.1_10-jre
