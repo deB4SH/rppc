@@ -1,0 +1,13 @@
+<settings>
+  <proxies>
+    <proxy>
+      <id>proxy</id>
+      <active>true</active>
+      <protocol>http</protocol>
+      <host>proxyHost</host>
+      <port>3128</port>
+      <username>username</username>
+      <password>password</password>
+    </proxy>
+ </proxies>
+</settings>
