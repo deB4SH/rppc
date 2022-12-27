@@ -3,6 +3,7 @@
 
 .env
 src/main/docker/environment/docker-compose.environment
+docker-compose-airgap.yml
 
 ### Eclipse ###
 .metadata
