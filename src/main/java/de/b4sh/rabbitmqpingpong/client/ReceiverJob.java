@@ -5,7 +5,6 @@ import de.b4sh.rabbitmqpingpong.RabbitMQService;
 import de.b4sh.rabbitmqpingpong.RuntimeConfiguration;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -28,7 +27,7 @@ public final class ReceiverJob implements Job {
     }
 
     @Override
-    public void execute(final JobExecutionContext jobExecutionContext) throws JobExecutionException {
+    public void execute(final JobExecutionContext jobExecutionContext) {
         final DeliverCallback cb = ((consumerTag, message) -> {
             final String unboxedMessage = new String(message.getBody(), StandardCharsets.UTF_8);
             log.log(Level.FINE, String.format("Received message: %s", unboxedMessage));
