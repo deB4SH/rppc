@@ -1,9 +1,0 @@
-version: "3.3"
-services:
-  svc1:
-    build:
-      context: .
-    volumes:
-      - ./src/main/maven/airgap/settings.xml:/root/.m2/settings.xml
-    env_file:
-      - src/main/docker/environment/docker-compose.environment
