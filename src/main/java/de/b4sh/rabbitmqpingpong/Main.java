@@ -1,41 +1,32 @@
 package de.b4sh.rabbitmqpingpong;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
+import de.b4sh.rabbitmqpingpong.client.ReceiverJob;
+import de.b4sh.rabbitmqpingpong.client.SenderJob;
+import org.quartz.*;
+import org.quartz.impl.StdSchedulerFactory;
 
-import javax.swing.*;
-import java.io.IOException;
-import java.security.*;
-import java.security.cert.CertificateException;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
 public class Main {
-
     private static final Logger log = Logger.getLogger(Main.class.getName());
 
-    public static void main(String[] args) {
-        RabbitMQService rabbitMQService = new RabbitMQService();
-        try {
-            Connection connection = rabbitMQService.connectToRabbitMQ();
-            Channel channel = rabbitMQService.connectToChannel(connection);
-            rabbitMQService.declareQueue(channel,"ping-pong-test");
-            rabbitMQService.sendMessageToQueue(channel,"ping-pong-test","test");
-        } catch (KeyStoreException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (CertificateException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (UnrecoverableKeyException e) {
-            throw new RuntimeException(e);
-        } catch (KeyManagementException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
-            throw new RuntimeException(e);
+    public static void main(final String[] args) throws SchedulerException {
+        final Scheduler scheduler = new StdSchedulerFactory().getScheduler();
+        scheduler.start();
+        if (RuntimeConfiguration.MODE.getValue().equals("sender")) {
+            final JobKey sender = new JobKey("sender", "rppc");
+            final JobDetail senderJob = JobBuilder.newJob(SenderJob.class).withIdentity(sender).build();
+            final Trigger senderTrigger = TriggerBuilder.newTrigger().withIdentity("senderTrigger", "rppc")
+                    .withSchedule(CronScheduleBuilder.cronSchedule("0/5 * * * * ?")).build();
+            scheduler.scheduleJob(senderJob, senderTrigger);
+        } else if (RuntimeConfiguration.MODE.getValue().equals("receiver")) {
+            final JobKey receiver = new JobKey("receiver", "rppc");
+            final JobDetail receiverJob = JobBuilder.newJob(ReceiverJob.class).withIdentity(receiver).build();
+            scheduler.addJob(receiverJob,true,true);
+            scheduler.triggerJob(receiver);
+
+        } else {
+            //TODO: implement overviewer with metrics.
         }
     }
 }

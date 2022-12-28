@@ -11,7 +11,10 @@ public enum RuntimeConfiguration {
     KEYSTORE_CLIENTKEYSTORE_PASSPHRASE(getValueFromEnv("rabbitmq.clientkeystorepassphase"),"superawesomepassword"),
     KEYSTORE_CLIENTKEYSTORE_PATH(getValueFromEnv("rabbitmq.clientkeystorepath"),"/tmp/clientcert.p12"),
     KEYSTORE_SERVERKEYSTORE_PASSPHRASE(getValueFromEnv("rabbitmq.serverkeystorepassphase"),"superawesomepassword"),
-    KEYSTORE_SERVERKEYSTORE_PATH(getValueFromEnv("rabbitmq.serverkeystorepath"),"/tmp/servercert.p12")
+    KEYSTORE_SERVERKEYSTORE_PATH(getValueFromEnv("rabbitmq.serverkeystorepath"),"/tmp/servercert.p12"),
+    QUEUE_SENDER(getValueFromEnv("rabbitmq.sender.queue"),"ping-pong-sender"),
+    QUEUE_RECEIVER(getValueFromEnv("rabbitmq.receiver.queue"),"ping-pong-receiver"),
+    MODE(getValueFromEnv("client.mode"),"receiver")
     ;
 
     private final String value;
