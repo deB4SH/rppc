@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ping-pong-service
+spec:
+  selector:
+    matchLabels:
+      app: ping-pong-service
+  template:
+    metadata:
+      labels:
+        app: ping-pong-service
+    spec:
+      containers:
+        #missing containers by designed -> will be added through components
+      securityContext:
+        runAsUser: 1000
+      restartPolicy: Always
+      volumes:
+        - name: certificates
+          configMap:
+            name: certificatestores

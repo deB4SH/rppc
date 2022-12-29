@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: ping-pong-metrics
+  name: ping-pong-metrics
+spec:
+  endpoints:
+  - interval: 5s
+    targetPort: 8080
+    path: '/'
+  namespaceSelector:
+    matchNames:
+    - ping-pong-service
+  selector:
+    matchLabels:
+      app: ping-pong-service
