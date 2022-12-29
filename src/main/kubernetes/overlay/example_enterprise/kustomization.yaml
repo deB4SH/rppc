@@ -12,6 +12,11 @@ components:
   - ../../components/receiver
   - ../../components/sender
 
+patchesStrategicMerge:
+  - configuration-metrics.yaml
+  - configuration-receiver.yaml
+  - configuration-sender.yaml
+
 generatorOptions:
  disableNameSuffixHash: true
 

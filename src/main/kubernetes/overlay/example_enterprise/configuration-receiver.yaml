@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configuration-receiver
+data:
+  rabbitmq.username: "pingpong-client"
+  rabbitmq.password: "aabbccddee11223344"
+  rabbitmq.host: "broker-0.rabbitmq.company.lan"
