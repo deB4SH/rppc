@@ -12,7 +12,7 @@ spec:
         app: ping-pong-service
     spec:
       containers:
-        - image: ghcr.io/deb4sh/ldap-homelab:sha-1033f81
+        - image: ghcr.io/deb4sh/rppc:0.0.3
           name: metrics
           envFrom:
             - configMapRef:
