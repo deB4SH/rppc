@@ -11,6 +11,7 @@ data:
   rabbitmq.sender.queue: "ping-pong-sender"
   rabbitmq.receiver.queue: "ping-pong-receiver"
   client.mode: "metrics"
+  rabbitmq.metrics.envname: "" # nametemplate: rabbitmq_sender_%s_timestamp , rabbitmq_receiver_%s_timestamp
   #client cert specific env vars
   rabbitmq.useclientcert: "true"
   rabbitmq.clientkeystorepassphase: "ping-pong"
