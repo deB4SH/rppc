@@ -32,8 +32,13 @@ public class MetricsJob implements Job {
         this.log.log(Level.INFO, "Initialize of MetricsJob");
         this.rabbitMQService = RabbitMQService.getInstance();
         this.log.log(Level.INFO, "Setup Gauges");
-        this.senderGauge = Gauge.build().name("rabbitmq_sender_timestamp").help("Epoch Timestamp of sender").register();
-        this.receiverGauge = Gauge.build().name("rabbitmq_receiver_timestamp").help("Epoch Timestamp of receiver").register();
+        if (RuntimeConfiguration.METRICS_ENVIRONMENT_NAME.getValue().isEmpty()) {
+            this.senderGauge = Gauge.build().name("rabbitmq_sender_timestamp").help("Epoch Timestamp of sender").register();
+            this.receiverGauge = Gauge.build().name("rabbitmq_receiver_timestamp").help("Epoch Timestamp of receiver").register();
+        } else {
+            this.senderGauge = Gauge.build().name(String.format("rabbitmq_sender_%s_timestamp", RuntimeConfiguration.METRICS_ENVIRONMENT_NAME.getValue().toLowerCase())).help("Epoch Timestamp of sender").register();
+            this.receiverGauge = Gauge.build().name(String.format("rabbitmq_receiver_%s_timestamp", RuntimeConfiguration.METRICS_ENVIRONMENT_NAME.getValue().toLowerCase())).help("Epoch Timestamp of receiver").register();
+        }
         this.log.log(Level.INFO, "Done setting up Class");
         // Expose Prometheus metrics.
         this.log.log(Level.INFO, "Setting up Prometheus Exporter");

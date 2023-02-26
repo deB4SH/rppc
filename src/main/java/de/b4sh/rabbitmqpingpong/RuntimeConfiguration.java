@@ -19,6 +19,8 @@ public enum RuntimeConfiguration {
     SENDER_CRON(getValueFromEnv("rabbitmq.sender.cron"),"0/5 * * * * ?"),
     //RECEIVER CONFIGURATION
     QUEUE_RECEIVER(getValueFromEnv("rabbitmq.receiver.queue"),"ping-pong-receiver"),
+    //METRICS CONFIGURATION
+    METRICS_ENVIRONMENT_NAME(getValueFromEnv("rabbitmq.metrics.envname"), ""),
 
     ;
 
