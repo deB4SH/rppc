@@ -49,21 +49,26 @@ public class RabbitMQService {
         log.log(Level.INFO, String.format("Trying to connect to %s on port %s", RuntimeConfiguration.HOST.getValue(), RuntimeConfiguration.PORT.getValue()));
 
         if (RuntimeConfiguration.USE_TLS_CLIENTCERT.getValue().equals("true")) {
+            log.log(Level.INFO, "Instance is configured to use client cert and server jks.");
+            log.log(Level.INFO, String.format("Starting read pkcs12 client certificate. Path: %s", RuntimeConfiguration.KEYSTORE_CLIENTKEYSTORE_PATH.getValue()));
             final char[] clientStorePassphrase = RuntimeConfiguration.KEYSTORE_CLIENTKEYSTORE_PASSPHRASE.getValue().toCharArray();
             final KeyStore clientKs = KeyStore.getInstance("PKCS12");
             clientKs.load(new FileInputStream(RuntimeConfiguration.KEYSTORE_CLIENTKEYSTORE_PATH.getValue()), clientStorePassphrase);
             final KeyManagerFactory clientKmf = KeyManagerFactory.getInstance("SunX509");
             clientKmf.init(clientKs, clientStorePassphrase);
-
+            log.log(Level.INFO, "Done reading pkcs12 client certificate.");
+            log.log(Level.INFO, String.format("Starting reading server jks. Path: %s",RuntimeConfiguration.KEYSTORE_SERVERKEYSTORE_PATH.getValue()));
             final char[] serverStorePassphrase = RuntimeConfiguration.KEYSTORE_SERVERKEYSTORE_PASSPHRASE.getValue().toCharArray();
             final KeyStore serverKs = KeyStore.getInstance("PKCS12");
             serverKs.load(new FileInputStream(RuntimeConfiguration.KEYSTORE_SERVERKEYSTORE_PATH.getValue()), serverStorePassphrase);
             final TrustManagerFactory serverTmf = TrustManagerFactory.getInstance("SunX509");
             serverTmf.init(serverKs);
-
+            log.log(Level.INFO, "Done reading server jsk.");
+            log.log(Level.INFO, "Building SSL Context");
             final SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
             sslContext.init(clientKmf.getKeyManagers(), serverTmf.getTrustManagers(), null);
             factory.useSslProtocol(sslContext);
+            log.log(Level.INFO, "Done building SSL Context");
         }
         return factory.newConnection();
     }
