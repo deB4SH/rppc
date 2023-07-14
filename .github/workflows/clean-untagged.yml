@@ -1,35 +1,23 @@
+name: Cleanup Untagged Images
+
 on:
-  push:
+  # every sunday at 00:00
+  schedule:
+    - cron: "0 0 * * SUN"
+  # or manually
   workflow_dispatch:
-  
-env:
-  PACKAGE_NAME: rppc
 
-permissions:
-  packages: write
-  
 jobs:
-  build:
+  delete-untagged-images:
+    name: Delete Untagged Images
     runs-on: ubuntu-latest
-
     steps:
-      - name: Delete untagged images
-        uses: actions/github-script@v6.3.3
+      - uses: bots-house/ghcr-delete-image-action@v1.1.0
         with:
-          github-token: ${{ secrets.DELETE_PACKAGES_TOKEN }}
-          script: |
-            const response = await github.request("GET /${{ env.OWNER }}/packages/container/${{ env.PACKAGE_NAME }}/versions",
-              { per_page: ${{ env.PER_PAGE }}
-            });
-            for(version of response.data) {
-                if (version.metadata.container.tags.length == 0) {
-                    console.log("delete " + version.id)
-
-                    const deleteResponse = await github.request("DELETE /${{ env.OWNER }}/packages/container/${{ env.PACKAGE_NAME }}/versions/" + version.id, { });
-                    console.log("status " + deleteResponse.status)
-                }
-            }
-        env:
-          OWNER: deb4sh
-          PACKAGE_NAME: ${{ env.PACKAGE_NAME }}
-          PER_PAGE: 100
+          # NOTE: at now only orgs is supported
+          owner: bots-house
+          name: some-web-service
+          # NOTE: using Personal Access Token
+          token: ${{ secrets.DELETE_PACKAGES_TOKEN }}
+          # Keep latest N untagged images
+          untagged-keep-latest: 0
